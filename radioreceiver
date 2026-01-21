@@ -8,75 +8,49 @@ private:
     std::string modulation_type;
 
 public:
-    void print() {
-        std::cout << "Working frequency: " << working_frequency
-                  << "  Sensitivity: " << sensitivity
-                  << "  Type of modulation: " << modulation_type
-                  << std::endl;
+    Radioreceiver() {
+        working_frequency = 0;
+        sensitivity = 0;
+        modulation_type = "undefined";
     }
 
-    void error() {
-        std::cout << "Error!!" << std::endl;
+    Radioreceiver(double wf, double st, const std::string& mt) {
+        set_wf(wf);
+        set_st(st);
+        set_mt(mt);
     }
 
-    void set_wf(double& WF) {
-        if (WF != 0)
-            working_frequency = WF;
-        else {
-            working_frequency = 404.;
-            error();
-        }
+    ~Radioreceiver() {
     }
 
-    void set_st(double& ST) {
-        if (ST != 0)
-            sensitivity = ST;
-        else {
-            sensitivity = 404.;
-            error();
-        }
-    }
-
-    void set_mt(const std::string& MT) {
-        if (MT.empty()){
-            modulation_type = "EROR";
-              error();   
-        }  
+    void set_wf(double wf) {
+        if (wf > 0)
+            working_frequency = wf;
         else
-            modulation_type = MT; 
-            
+            working_frequency = 404;
     }
 
-    double get_wf(){
-         return working_frequency;
+    void set_st(double st) {
+        if (st > 0)
+            sensitivity = st;
+        else
+            sensitivity = 404;
     }
 
-    double get_st(){
-        return sensitivity;
+    void set_mt(const std::string& mt) {
+        if (!mt.empty())
+            modulation_type = mt;
+        else
+            modulation_type = "ERROR";
     }
 
-    const std::string get_mt(){
-        return modulation_type;
+    void print() const {
+        std::cout << "  WF: " << working_frequency
+                  << "  ST: " << sensitivity
+                  << "  MT: " << modulation_type << std::endl;
     }
 
-    void print_wf(){
-        std::cout << "working frequency: "<< working_frequency << std::endl;
-    }
-
-    void print_st(){
-        std::cout << "sensitivity: " <<sensitivity << std::endl;
-    }
-
-    void print_mt(){
-        std::cout << "modulation type: "<< modulation_type << std::endl;
-    }
-
-    void print_comment(){
-        std::string comment;
-        std::cin >> comment;
-    }
-
-    void print_range(){
+     void print_range(){
         int number;
         std::cin >> number;
         if (number <= working_frequency)
@@ -84,32 +58,36 @@ public:
         else
         std::cout << "correct" << std::endl;
     }
-
-    Radioreceiver(double& WF, double& ST, const std::string& MT) {
-        set_wf(WF);
-        set_st(ST);
-        set_mt(MT);
-        print();
-    }
-
-    ~Radioreceiver() {
-        std::cout << "deleted: " << working_frequency << "  deleted: " << sensitivity << "  deleted: " << modulation_type << std::endl;
-    }
-
 };
 
-int main() { 
-    Radioreceiver op1(1000, 10, "WI");
-    Radioreceiver op2(300, 0, "AF");
-    Radioreceiver op3(0.0, 200, "wp");
-    Radioreceiver op4(500, 200, "");
-    
-    op3.print_mt();
-    op2.print_wf();
-    op1.print_st();
-    
-    op1.print_range();
-    op4.print_comment();
-    
+void print_comment(){
+        std::string comment;
+        std::cin >> comment;
+    }
+
+void changeRadioreceiver(Radioreceiver& r, double wf, double st, const std::string& mt) {
+    r.set_wf(wf);
+    r.set_st(st);
+    r.set_mt(mt);
+}
+
+int main() {
+    Radioreceiver r1(1000, 10, "FM");
+
+    r1.print();
+
+    Radioreceiver r2(600, 0, "WI");
+
+    r2.print();
+
+    changeRadioreceiver(r1, 0, 200, "");
+
+    r1.print();
+
+    r2.print_range();
+
+    print_comment();
+
+
     return 0;
 }
